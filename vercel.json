@@ -1,7 +1,6 @@
 {
-  "outputDirectory": ".",
   "rewrites": [
     { "source": "/backend/:path*", "destination": "/backend/:path*" },
-    { "source": "/:path*", "destination": "/frontend/:path*" }
+    { "source": "/(.*)", "destination": "/frontend/$1" }
   ]
 }
