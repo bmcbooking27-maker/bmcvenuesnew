@@ -464,3 +464,151 @@
 .toast-close:hover {
     color: var(--primary);
 }
+
+/* --- Admin filter toolbar --- */
+.search-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+.admin-filter-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.admin-filters {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    flex: 1;
+}
+
+.admin-filter-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.admin-filter-input {
+    width: auto;
+    padding: 6px 12px;
+    height: 34px;
+}
+
+.admin-filter-btn,
+.admin-new-booking-btn {
+    padding: 6px 16px;
+    height: 34px;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.admin-new-booking-btn {
+    border: 1px solid var(--primary);
+    flex-shrink: 0;
+}
+
+/* ================================================================
+   ADMIN RESPONSIVE
+   ================================================================ */
+
+@media (max-width: 768px) {
+    .app-layout .venues-main {
+        padding-top: calc(var(--navbar-height) + 20px);
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .admin-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 16px;
+        gap: 12px;
+    }
+
+    .admin-search-wrap {
+        max-width: none;
+        min-width: 0;
+        width: 100%;
+    }
+
+    .admin-filter-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .admin-filters {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+    }
+
+    .admin-filter-group {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+    }
+
+    .admin-filter-input,
+    .admin-filter-btn,
+    .admin-new-booking-btn {
+        width: 100%;
+        height: 40px;
+    }
+
+    .admin-new-booking-btn {
+        order: -1;
+    }
+
+    .modal-content {
+        padding: 24px 20px;
+        width: 94%;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .modal-actions {
+        flex-direction: column-reverse;
+    }
+
+    .modal-actions .btn {
+        width: 100%;
+    }
+
+    .toast-container {
+        top: auto;
+        bottom: 16px;
+        left: 16px;
+        right: 16px;
+    }
+
+    .toast {
+        min-width: 0;
+        max-width: none;
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-header h2 {
+        font-size: 1.2rem;
+    }
+
+    .btn-action-edit,
+    .btn-action-delete {
+        padding: 8px 14px;
+        font-size: 13px;
+    }
+}

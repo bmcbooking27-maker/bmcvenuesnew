@@ -19,13 +19,21 @@
             <div class="nav-brand">
                 <span class="brand-text">BHARATA MATA COLLEGE</span>
             </div>
-            
-            <nav class="nav-menu">
-                <a href="adminpg.html" class="nav-item active">Admin Portal</a>
-            </nav>
 
-            <div class="nav-actions">
-                <button class="btn-admin logout-btn">Logout</button>
+            <button class="nav-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false">
+                <span class="nav-toggle-bar"></span>
+                <span class="nav-toggle-bar"></span>
+                <span class="nav-toggle-bar"></span>
+            </button>
+
+            <div class="nav-panel">
+                <nav class="nav-menu">
+                    <a href="adminpg.html" class="nav-item active">Admin Portal</a>
+                </nav>
+
+                <div class="nav-actions">
+                    <button class="btn-admin logout-btn">Logout</button>
+                </div>
             </div>
         </header>
 
@@ -49,24 +57,26 @@
                         <button class="admin-search-clear" id="admin-search-clear" title="Clear search" style="display:none;">&#x2715;</button>
                     </div>
 
-                    <div style="display: flex; align-items: center; gap: 16px;">
-                        <div class="search-group" style="flex-direction: row; align-items: center; gap: 12px; max-width: none;">
-                            <label for="venue-filter" class="search-label" style="margin-bottom: 0; white-space: nowrap;">Venue:</label>
-                            <select id="venue-filter" class="input-field" style="width: auto; padding: 6px 12px; height: 34px;">
-                                <option value="">All</option>
-                                <option value="AV Room">AV Room</option>
-                                <option value="Stage">Stage</option>
-                                <option value="MSW Hall">MSW Hall</option>
-                                <option value="MBA Hall">MBA Hall</option>
-                                <option value="Seminar Hall">Seminar Hall</option>
-                            </select>
-                            <label for="date-filter" class="search-label" style="margin-bottom: 0; white-space: nowrap;">Date:</label>
-                            <input type="date" id="date-filter" class="input-field" style="width: auto; padding: 6px 12px; height: 34px;">
-                            <button class="btn-primary-blue" id="clear-filter" style="padding: 6px 16px; height: 34px; line-height: 1;">Clear Filter</button>
+                    <div class="admin-filter-row">
+                        <div class="admin-filters">
+                            <div class="admin-filter-group">
+                                <label for="venue-filter" class="search-label">Venue:</label>
+                                <select id="venue-filter" class="input-field admin-filter-input">
+                                    <option value="">All</option>
+                                    <option value="AV Room">AV Room</option>
+                                    <option value="Stage">Stage</option>
+                                    <option value="MSW Hall">MSW Hall</option>
+                                    <option value="MBA Hall">MBA Hall</option>
+                                    <option value="Seminar Hall">Seminar Hall</option>
+                                </select>
+                            </div>
+                            <div class="admin-filter-group">
+                                <label for="date-filter" class="search-label">Date:</label>
+                                <input type="date" id="date-filter" class="input-field admin-filter-input">
+                            </div>
+                            <button class="btn-primary-blue admin-filter-btn" id="clear-filter">Clear Filter</button>
                         </div>
-                        <button class="btn-primary-blue" id="newBookingBtn" style="padding: 6px 16px; height: 34px; line-height: 1; border: 1px solid var(--primary-blue);">
-                            + New Booking
-                        </button>
+                        <button class="btn-primary-blue admin-new-booking-btn" id="newBookingBtn">+ New Booking</button>
                     </div>
                 </div>
 
@@ -161,6 +171,7 @@
     <div id="toast-container" class="toast-container" aria-live="polite"></div>
 
     <!-- Supabase and Logic -->
+    <script src="../script.js"></script>
     <script src="../supabase.js"></script>
     <script src="../login/login.js"></script>
     <script>
@@ -329,15 +340,15 @@
                 const timeFrom = toTimeInputValue(b['Time(from)']) || '—';
                 const timeTo = toTimeInputValue(b['Time(to)']) || '—';
                 tr.innerHTML = `
-                    <td style="white-space: nowrap;">${b.Date ? b.Date.split('-').reverse().join('-') : ''}</td>
-                    <td class="font-medium">${b.Function_Name || ''}</td>
-                    <td>${b.Venue || ''}</td>
-                    <td>${b.Coordinator || ''}</td>
-                    <td>${b.Department_Name || '—'}</td>
-                    <td>${timeFrom}</td>
-                    <td>${timeTo}</td>
-                    <td>${contactNo}</td>
-                    <td>
+                    <td data-label="Date">${b.Date ? b.Date.split('-').reverse().join('-') : ''}</td>
+                    <td class="font-medium" data-label="Function">${b.Function_Name || ''}</td>
+                    <td data-label="Venue">${b.Venue || ''}</td>
+                    <td data-label="Coordinator">${b.Coordinator || ''}</td>
+                    <td data-label="Department">${b.Department_Name || '—'}</td>
+                    <td data-label="Time From">${timeFrom}</td>
+                    <td data-label="Time To">${timeTo}</td>
+                    <td data-label="Contact">${contactNo}</td>
+                    <td data-label="Action">
                         <div class="action-cell">
                             <button type="button" class="btn-action-edit" data-action="edit">Edit</button>
                             <button type="button" class="btn-action-delete" data-action="delete">Delete</button>

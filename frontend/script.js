@@ -1,7 +1,45 @@
 document.addEventListener("DOMContentLoaded", () => {
+    initMobileNav();
     initVenuesPage();
     initHomeImageAnimations();
 });
+
+function initMobileNav() {
+    const navbar = document.querySelector(".navbar");
+    const toggle = document.querySelector(".nav-toggle");
+    if (!navbar || !toggle) return;
+
+    toggle.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const isOpen = navbar.classList.toggle("is-open");
+        toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+        document.body.style.overflow = isOpen ? "hidden" : "";
+    });
+
+    document.addEventListener("click", (e) => {
+        if (!navbar.contains(e.target)) {
+            navbar.classList.remove("is-open");
+            toggle.setAttribute("aria-expanded", "false");
+            document.body.style.overflow = "";
+        }
+    });
+
+    navbar.querySelectorAll(".nav-item:not(#contact-btn), .nav-actions a, .nav-actions button").forEach((el) => {
+        el.addEventListener("click", () => {
+            navbar.classList.remove("is-open");
+            toggle.setAttribute("aria-expanded", "false");
+            document.body.style.overflow = "";
+        });
+    });
+
+    window.addEventListener("resize", () => {
+        if (window.innerWidth > 768) {
+            navbar.classList.remove("is-open");
+            toggle.setAttribute("aria-expanded", "false");
+            document.body.style.overflow = "";
+        }
+    });
+}
 
 function initVenuesPage() {
     const dateInput = document.getElementById("venue-date-filter");
@@ -143,13 +181,13 @@ async function loadVenuesTable() {
         const tr = document.createElement("tr");
         tr.className = "row-booked";
         tr.innerHTML = `
-            <td class="row-index">${String(index + 1).padStart(2, "0")}</td>
-            <td class="venue-name-cell">${b.Venue || "—"}</td>
-            <td>${b.Department_Name || "—"}</td>
-            <td>${b.Function_Name || "—"}</td>
-            <td>${b.Date ? b.Date.split('-').reverse().join('-') : "—"}</td>
-            <td>${b['Time(from)'] || "—"}</td>
-            <td>${b['Time(to)'] || "—"}</td>
+            <td class="row-index" data-label="No.">${String(index + 1).padStart(2, "0")}</td>
+            <td class="venue-name-cell" data-label="Venue">${b.Venue || "—"}</td>
+            <td data-label="Department">${b.Department_Name || "—"}</td>
+            <td data-label="Function">${b.Function_Name || "—"}</td>
+            <td data-label="Date">${b.Date ? b.Date.split('-').reverse().join('-') : "—"}</td>
+            <td data-label="Start Time">${b['Time(from)'] || "—"}</td>
+            <td data-label="End Time">${b['Time(to)'] || "—"}</td>
         `;
         tbody.appendChild(tr);
     });

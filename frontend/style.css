@@ -1125,3 +1125,532 @@ a.contact-dropdown-number:hover {
     text-decoration: underline;
     color: var(--primary-blue);
 }
+
+/* --- MOBILE NAV TOGGLE (hidden on desktop) --- */
+.nav-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 40px;
+    height: 40px;
+    padding: 8px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 4px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.nav-toggle-bar {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background-color: var(--white);
+    border-radius: 1px;
+    transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.navbar.is-open .nav-toggle-bar:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.navbar.is-open .nav-toggle-bar:nth-child(2) {
+    opacity: 0;
+}
+
+.navbar.is-open .nav-toggle-bar:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
+.nav-panel {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+}
+
+/* --- TABLE WRAPPER --- */
+.venues-table-wrap {
+    max-width: 1240px;
+    margin: 0 auto;
+    background-color: var(--white);
+    border: 1px solid var(--border-grey);
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(10, 34, 64, 0.08);
+}
+
+.font-medium {
+    font-weight: 600;
+}
+
+/* ================================================================
+   RESPONSIVE BREAKPOINTS
+   ================================================================ */
+
+/* --- Tablet landscape / small desktop (≤1024px) --- */
+@media (max-width: 1024px) {
+    .hero-text-block h1 {
+        font-size: 38px;
+    }
+
+    .facility-text-block h2 {
+        font-size: 34px;
+    }
+
+    .facility-text-block {
+        max-width: 50%;
+    }
+
+    .hero-image-canvas {
+        width: 45%;
+    }
+
+    .venues-stats-inner {
+        padding: 0 24px;
+        flex-wrap: wrap;
+        height: auto;
+        padding-top: 12px;
+        padding-bottom: 12px;
+    }
+
+    .stat-item {
+        padding: 8px 24px 8px 0;
+    }
+}
+
+/* --- Tablet portrait (≤768px) --- */
+@media (max-width: 768px) {
+    :root {
+        --navbar-height: 64px;
+    }
+
+    .navbar {
+        flex-wrap: wrap;
+        padding: 10px 16px;
+        position: fixed;
+    }
+
+    .nav-brand {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .brand-text {
+        font-size: 12px;
+        line-height: 1.35;
+        display: block;
+        word-break: break-word;
+    }
+
+    .nav-toggle {
+        display: flex;
+    }
+
+    .nav-panel {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        background-color: var(--primary-blue);
+        padding: 8px 16px 16px;
+        border-top: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        max-height: calc(100vh - var(--navbar-height));
+        overflow-y: auto;
+    }
+
+    .navbar.is-open .nav-panel {
+        display: flex;
+    }
+
+    .nav-menu {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        width: 100%;
+    }
+
+    .nav-item {
+        padding: 14px 0;
+        font-size: 15px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .nav-item.active::after {
+        bottom: 10px;
+    }
+
+    .nav-actions {
+        width: 100%;
+        padding-top: 12px;
+    }
+
+    .nav-actions .btn-admin,
+    .nav-actions a {
+        display: block;
+        width: 100%;
+    }
+
+    .nav-actions .btn-admin {
+        width: 100%;
+        text-align: center;
+        padding: 12px 16px;
+    }
+
+    .nav-contact-wrapper {
+        display: block;
+        width: 100%;
+    }
+
+    #contact-btn {
+        width: 100%;
+        text-align: left;
+        padding: 14px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    #contact-dropdown {
+        position: static;
+        transform: none;
+        display: none;
+        width: 100%;
+        margin: 0 0 8px;
+        box-shadow: none;
+        border-radius: 4px;
+    }
+
+    /* --- Hero section: stack image above text --- */
+    .hero-frame-section {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 0 16px 48px;
+        padding-top: calc(var(--navbar-height) + 16px);
+        min-height: auto;
+    }
+
+    .hero-image-canvas {
+        position: relative;
+        width: 100%;
+        height: 240px;
+        order: -1;
+        margin-bottom: 24px;
+        filter: drop-shadow(0 12px 24px rgba(5, 12, 40, 0.3));
+    }
+
+    .hero-image-canvas.canvas-right,
+    .hero-image-canvas.canvas-left {
+        right: auto;
+        left: auto;
+    }
+
+    .canvas-right .clean-image-frame,
+    .canvas-left .clean-image-frame {
+        clip-path: none;
+        border-radius: 4px;
+    }
+
+    .geometric-bg-accent,
+    .geometric-shadow-layer {
+        display: none;
+    }
+
+    .hero-grid-container {
+        align-items: flex-start;
+        width: 100%;
+    }
+
+    .facility-row .hero-grid-container {
+        width: 100%;
+    }
+
+    .hero-image-canvas.image-launch-pending,
+    .hero-image-canvas.image-launch-in,
+    .hero-image-canvas.image-slide-in .clean-image-frame {
+        animation: none;
+        transform: none;
+        opacity: 1;
+    }
+
+    .content-right {
+        align-items: flex-start;
+    }
+
+    .hero-logo-container {
+        padding-top: 0;
+    }
+
+    .hero-inserted-logo {
+        max-height: 56px;
+    }
+
+    .hero-text-block {
+        max-width: 100%;
+        margin-top: 0;
+    }
+
+    .hero-text-block h1 {
+        font-size: 32px;
+    }
+
+    .hero-description-text {
+        font-size: 15px;
+    }
+
+    .btn-primary-blue {
+        width: 100%;
+        text-align: center;
+    }
+
+    /* --- Facility rows: single column --- */
+    .facility-row {
+        flex-direction: column;
+        align-items: stretch;
+        min-height: auto;
+        padding: 40px 16px;
+    }
+
+    .facility-row .hero-image-canvas {
+        position: relative;
+        width: 100%;
+        height: 220px;
+        order: -1;
+        margin-bottom: 28px;
+    }
+
+    .facility-text-block {
+        max-width: 100%;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .facility-text-block h2 {
+        font-size: 28px;
+    }
+
+    .facility-description {
+        font-size: 16px;
+    }
+
+    /* --- Venues page header --- */
+    .venues-page-header {
+        padding: 32px 16px;
+        padding-top: calc(var(--navbar-height) + 32px);
+        min-height: 200px;
+    }
+
+    .venues-page-title {
+        font-size: clamp(36px, 10vw, 52px);
+        letter-spacing: 2px;
+    }
+
+    .venues-title-accent {
+        letter-spacing: 4px;
+    }
+
+    .venue-slide {
+        width: 280px;
+    }
+
+    /* --- Venues main & filters --- */
+    .venues-main {
+        padding: 24px 16px 48px;
+    }
+
+    .main-content-layout {
+        padding: 40px 16px;
+    }
+
+    .table-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        padding: 16px;
+    }
+
+    .venues-filters {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+        gap: 10px;
+    }
+
+    .venues-search-input,
+    .venues-filter-select,
+    .venues-date-input,
+    .btn-clear-filters {
+        width: 100%;
+        min-width: 0;
+        height: 40px;
+    }
+
+    .venues-date-filter {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+    }
+
+    .table-footer-note {
+        padding: 14px 16px;
+        font-size: 12px;
+    }
+
+    /* --- Mobile table card layout --- */
+    .table-scroll {
+        overflow-x: visible;
+        max-height: none;
+        padding: 12px;
+        background-color: var(--light-blue-shading);
+    }
+
+    .venues-table thead {
+        display: none;
+    }
+
+    .venues-table tbody tr {
+        display: block;
+        background-color: var(--white);
+        border: 1px solid var(--border-grey);
+        border-radius: 4px;
+        margin-bottom: 12px;
+        padding: 4px 0;
+        box-shadow: 0 2px 8px rgba(10, 34, 64, 0.06);
+    }
+
+    .venues-table tbody tr:last-child {
+        margin-bottom: 0;
+    }
+
+    .venues-table tbody td {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 10px 16px;
+        text-align: right;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .venues-table tbody td:last-child {
+        border-bottom: none;
+    }
+
+    .venues-table tbody td::before {
+        content: attr(data-label);
+        font-weight: 700;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--text-secondary);
+        text-align: left;
+        flex-shrink: 0;
+        max-width: 45%;
+    }
+
+    .venues-table tbody td:first-child,
+    .venues-table tbody td:last-child {
+        padding-left: 16px;
+        padding-right: 16px;
+        text-align: right;
+    }
+
+    .venues-table tbody td[colspan] {
+        display: block;
+        text-align: center;
+    }
+
+    .venues-table tbody td[colspan]::before {
+        display: none;
+    }
+
+    .venue-name-cell {
+        white-space: normal;
+        justify-content: space-between;
+    }
+
+    .row-index {
+        width: auto;
+    }
+
+    .action-cell {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 6px;
+    }
+
+    .venues-table tbody td[data-label="Action"] {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .venues-table tbody td[data-label="Action"] .action-cell {
+        flex-direction: row;
+        justify-content: flex-end;
+        width: 100%;
+    }
+
+    /* --- Footer & floating button --- */
+    .system-footer {
+        padding: 24px 16px;
+    }
+
+    .floating-contact-ball {
+        bottom: 20px;
+        right: 16px;
+        width: 52px;
+        height: 52px;
+    }
+
+    .floating-contact-ball svg {
+        width: 22px;
+        height: 22px;
+    }
+
+    .section-title-wrap h2 {
+        font-size: 26px;
+    }
+
+    .status-matrix-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* --- Small phones (≤480px) --- */
+@media (max-width: 480px) {
+    .brand-text {
+        font-size: 11px;
+    }
+
+    .hero-text-block h1 {
+        font-size: 26px;
+    }
+
+    .hero-image-canvas {
+        height: 200px;
+    }
+
+    .facility-row .hero-image-canvas {
+        height: 180px;
+    }
+
+    .facility-text-block h2 {
+        font-size: 24px;
+    }
+
+    .venues-page-title {
+        letter-spacing: 1px;
+    }
+
+    .venues-title-accent {
+        letter-spacing: 2px;
+        font-size: 0.68em;
+    }
+
+    .table-heading {
+        font-size: 16px;
+    }
+}
