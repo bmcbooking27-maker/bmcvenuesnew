@@ -113,7 +113,8 @@
 
     <!-- New / Edit Booking Modal -->
     <div id="bookingModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-wrapper">
+            <div class="modal-content">
             <div class="modal-header">
                 <h2 id="modalTitle">Create New Booking</h2>
                 <button class="close-btn" id="closeModalBtn">&times;</button>
@@ -133,6 +134,7 @@
                         <input type="time" id="booking-time-to" name="timeTo" required class="input-field">
                     </div>
                 </div>
+                <div id="time-error" style="color: #c0392b; font-size: 0.8rem; display: none; margin-top: -15px; margin-bottom: 5px; margin-left: 2px;">Invalid time format</div>
                 <div class="form-group">
                     <label for="booking-function">Name of Function</label>
                     <input type="text" id="booking-function" name="functionName" placeholder="e.g. Guest Lecture" required class="input-field">
@@ -165,6 +167,16 @@
                     <button type="submit" class="btn btn-primary" id="submitBookingBtn">Save Booking</button>
                 </div>
             </form>
+        </div>
+        
+        <!-- NEW SCHEDULE PANEL -->
+        <div class="modal-schedule" id="modalSchedulePanel">
+            <div class="modal-header">
+                <h3 style="font-size: 1.2rem;">Existing Bookings: <span id="scheduleDateDisplay" style="color: var(--text-muted); font-weight: 600;"></span></h3>
+            </div>
+            <div class="schedule-list" id="scheduleList">
+                <div class="schedule-empty">Select a date to view existing bookings.</div>
+            </div>
         </div>
     </div>
 
@@ -215,6 +227,7 @@
             submitBookingBtn.textContent = 'Save Booking';
             bookingForm.reset();
             modal.classList.add('show');
+            updateSchedulePanel();
         }
 
         function openEditModal(booking) {
@@ -230,6 +243,7 @@
             document.getElementById('booking-department').value = booking.Department_Name || '';
             document.getElementById('booking-contact').value = booking.contact_no ? String(booking.contact_no) : '';
             modal.classList.add('show');
+            updateSchedulePanel();
         }
 
         function closeModal() {
@@ -488,6 +502,108 @@
         if (venueFilterInput) {
             venueFilterInput.addEventListener('change', applyFilters);
         }
+        
+        const bDateInput = document.getElementById('booking-date');
+        const bTimeFromInput = document.getElementById('booking-time-from');
+        const bTimeToInput = document.getElementById('booking-time-to');
+        const bVenueInput = document.getElementById('booking-venue');
+        const scheduleDateDisplay = document.getElementById('scheduleDateDisplay');
+        const scheduleList = document.getElementById('scheduleList');
+
+        function updateSchedulePanel() {
+            const selectedDate = bDateInput.value;
+            const selectedVenue = bVenueInput.value;
+            const tFrom = bTimeFromInput.value;
+            const tTo = bTimeToInput.value;
+            
+            const modalWrapper = document.querySelector('.modal-wrapper');
+            const timeError = document.getElementById('time-error');
+            
+            if (tFrom && tTo && tFrom >= tTo) {
+                if (timeError) timeError.style.display = 'block';
+            } else {
+                if (timeError) timeError.style.display = 'none';
+            }
+
+            if (!selectedDate) {
+                if (modalWrapper) modalWrapper.classList.remove('show-schedule');
+                scheduleDateDisplay.textContent = '...';
+                scheduleList.innerHTML = '<div class="schedule-empty" style="color: var(--text-muted); font-size: 0.9rem; text-align: center; padding: 20px;">Select a date to view existing bookings.</div>';
+                return;
+            }
+            
+            if (modalWrapper) modalWrapper.classList.add('show-schedule');
+
+            scheduleDateDisplay.textContent = selectedDate.split('-').reverse().join('-');
+
+            const dayBookings = cachedBookings.filter(b => b.Date === selectedDate);
+
+            if (dayBookings.length === 0) {
+                scheduleList.innerHTML = '<div class="schedule-empty" style="color: var(--text-muted); font-size: 0.9rem; text-align: center; padding: 20px;">No bookings for this date.</div>';
+                return;
+            }
+
+            dayBookings.sort((a, b) => (a['Time(from)'] || '').localeCompare(b['Time(from)'] || ''));
+
+            let html = '';
+            dayBookings.forEach(b => {
+                let isOverlap = false;
+                const venueMatches = !selectedVenue || selectedVenue === b.Venue;
+
+                if (venueMatches && (tFrom || tTo)) {
+                    const existingFrom = b['Time(from)'];
+                    const existingTo = b['Time(to)'];
+                    
+                    if (editingBookingId !== b.Booking_ID) {
+                        if (tFrom && tTo) {
+                            if (tFrom < existingTo && tTo > existingFrom) isOverlap = true;
+                        } else if (tFrom) {
+                            if (tFrom >= existingFrom && tFrom < existingTo) isOverlap = true;
+                        } else if (tTo) {
+                            if (tTo > existingFrom && tTo <= existingTo) isOverlap = true;
+                        }
+                    }
+                }
+
+                const cTimeFrom = formatTimeToAMPM(toTimeInputValue(b['Time(from)']));
+                const cTimeTo = formatTimeToAMPM(toTimeInputValue(b['Time(to)']));
+                
+                html += `
+                    <div class="schedule-item ${isOverlap ? 'has-overlap' : ''}" style="cursor: pointer;" onclick="scrollToBooking(${b.Booking_ID})">
+                        <div class="schedule-item-time">${cTimeFrom} - ${cTimeTo}</div>
+                        <div class="schedule-item-details">
+                            <span class="schedule-item-venue">${b.Venue || '—'}</span>
+                            <span class="schedule-item-func">${b.Function_Name || '—'}</span>
+                            <span class="schedule-item-coord" style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">${b.Coordinator || '—'} • ${b.Department_Name || '—'}</span>
+                        </div>
+                        ${isOverlap ? '<div class="clash-warning">Already Booked</div>' : ''}
+                    </div>
+                `;
+            });
+
+            scheduleList.innerHTML = html;
+        }
+
+        window.scrollToBooking = function(bookingId) {
+            closeModal();
+            setTimeout(() => {
+                const row = document.querySelector(`tr[data-booking-id="${bookingId}"]`);
+                if (row) {
+                    row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    const origBg = row.style.backgroundColor;
+                    row.style.backgroundColor = '#e0f2fe';
+                    row.style.transition = 'background-color 0.5s';
+                    setTimeout(() => {
+                        row.style.backgroundColor = origBg;
+                    }, 2000);
+                }
+            }, 300);
+        };
+
+        bDateInput.addEventListener('input', updateSchedulePanel);
+        bTimeFromInput.addEventListener('input', updateSchedulePanel);
+        bTimeToInput.addEventListener('input', updateSchedulePanel);
+        bVenueInput.addEventListener('change', updateSchedulePanel);
         
         loadBookings();
     </script>
