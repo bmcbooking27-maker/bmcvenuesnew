@@ -515,6 +515,27 @@
     flex-shrink: 0;
 }
 
+/* Date column formatting for desktop view to prevent wrapping */
+@media (min-width: 769px) {
+    .venues-table td[data-label="Date"] {
+        white-space: nowrap;
+    }
+
+    /* Center the Admin Portal text in the navbar */
+    .navbar .nav-panel {
+        display: flex;
+        flex: 1;
+        justify-content: flex-end;
+        align-items: center;
+    }
+    
+    .navbar .nav-menu {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}
+
 /* ================================================================
    ADMIN RESPONSIVE
    ================================================================ */
