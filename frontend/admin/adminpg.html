@@ -337,8 +337,8 @@
                 tr.className = 'row-booked';
                 tr.dataset.bookingId = b.Booking_ID;
                 const contactNo = b.contact_no ? String(b.contact_no) : '—';
-                const timeFrom = toTimeInputValue(b['Time(from)']) || '—';
-                const timeTo = toTimeInputValue(b['Time(to)']) || '—';
+                const timeFrom = formatTimeToAMPM(toTimeInputValue(b['Time(from)']));
+                const timeTo = formatTimeToAMPM(toTimeInputValue(b['Time(to)']));
                 tr.innerHTML = `
                     <td data-label="Date">${b.Date ? b.Date.split('-').reverse().join('-') : ''}</td>
                     <td class="font-medium" data-label="Function">${b.Function_Name || ''}</td>
@@ -434,6 +434,22 @@
             submitBookingBtn.disabled = true;
 
             try {
+                // Basic time validation
+                if (data['Time(from)'] >= data['Time(to)']) {
+                    showToast('Start time must be before end time.', 'error', 'Invalid Time');
+                    return;
+                }
+
+                // Check for overlapping bookings
+                const overlapCheck = await checkBookingOverlap(data, isEdit ? editingBookingId : null);
+                if (overlapCheck.overlap) {
+                    const cb = overlapCheck.conflictingBooking;
+                    const cTimeFrom = toTimeInputValue(cb['Time(from)']);
+                    const cTimeTo = toTimeInputValue(cb['Time(to)']);
+                    showToast(`This venue is already booked from ${cTimeFrom} to ${cTimeTo} for ${cb.Function_Name || 'another event'}.`, 'error', 'Time Clash');
+                    return;
+                }
+
                 if (isEdit) {
                     await updateBooking(editingBookingId, data);
                     showToast('Your changes have been saved to the database.', 'success', 'Booking Updated');
